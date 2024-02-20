@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CheckoutStep from '../components/CheckoutStep';
-import FormContainer from '../components/FormContainer';
 import Loader from '../components/Loader';
 import Message from '../components/message';
 import { clearCartItems } from '../slices/cartSlice';
@@ -25,24 +24,27 @@ const PlaceOrderScreen = () => {
         }
     }, [navigate, shippingAddress, paymentMethod]);
     const [createOrder, {isLoading, error}]=useCreateOrderMutation()
-const placeOrderHandler=async()=>{
-    try {
-        const res=await createOrder({
-            orderItems:cart.cartItems,
-            shippingAddress:cart.shippingAddress,
-            paymentMethod:cart.paymentMethod,
-            itemsPrice:cart.itemsPrice,
-            shippingPrice:cart.shippingPrice,
-            taxPrice:cart.taxPrice,
-            totalPrice:cart.totalPrice
-        }).unwrap();
-        dispatch(clearCartItems());
-        navigate(`/order/${res._id}`)
-    } catch (error) {
-        toast.error(error.message);
-    }
-  
-}
+    const placeOrderHandler = async () => {
+        console.log('cart:', cart);
+    
+        try {
+            const res = await createOrder({
+                orderItems: cart.cartItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: cart.itemsPrice,
+                shippingPrice: cart.shippingPrice,
+                taxPrice: cart.taxPrice,
+                totalPrice: cart.totalPrice
+            }).unwrap();
+    
+            dispatch(clearCartItems());
+            navigate(`/order/${res._id}`);
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+    
     return (
         <>
         <CheckoutStep step1 step2 step3 step4/>

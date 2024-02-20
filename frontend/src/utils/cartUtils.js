@@ -4,11 +4,11 @@ export const addDecimal = (num) => {
 
 // cartUtils.js
 export const updateCart = (state) => {
-    state.itemPrice = addDecimal(state.cartItems.reduce((acc, item) =>
+    state.itemsPrice = addDecimal(state.cartItems.reduce((acc, item) =>
      acc + item.price * item.qty, 0));
-    state.shippingPrice = addDecimal(state.itemPrice > 100 ? 0 : 10);
-    state.taxPrice = addDecimal(Number(state.itemPrice * 0.15).toFixed(2));
-     state.totalPrice = addDecimal(Number(state.itemPrice)
+    state.shippingPrice = addDecimal(state.itemsPrice > 100 ? 0 : 10);
+    state.taxPrice = addDecimal(Number(state.itemsPrice * 0.15).toFixed(2));
+     state.totalPrice = addDecimal(Number(state.itemsPrice)
       + Number(state.shippingPrice) + Number(state.taxPrice));
     
     // Save only cartItems to local storage

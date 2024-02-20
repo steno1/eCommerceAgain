@@ -1,6 +1,5 @@
 // Import statements with consistent quotes
 
-import { Admin, protect } from "../Middleware/authMiddleware.js";
 import {
     DeleteUsers,
     authUser,
@@ -12,6 +11,7 @@ import {
     updateUserProfile,
     updateUsers,
 } from "../controllers/userController.js";
+import { admin, protect } from "../Middleware/authMiddleware.js";
 
 import express from "express";
 
@@ -19,7 +19,7 @@ const router = express.Router();
 
 // Route definitions with consistent indentation
 router.route("/")
-    .get(Admin, protect, getUser)
+    .get(admin, protect, getUser)
     .post(registerUsers);
 
 router.post("/logout", logoutUsers);
@@ -30,8 +30,8 @@ router.route("/profile")
     .put(protect, updateUserProfile);
 
 router.route("/:id")
-    .delete(protect,Admin,DeleteUsers)
-    .get(protect,Admin,getUserById)
-    .put(protect,Admin, updateUsers);
+    .delete(protect,admin,DeleteUsers)
+    .get(protect,admin,getUserById)
+    .put(protect,admin, updateUsers);
 
 export default router;

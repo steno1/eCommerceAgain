@@ -1,7 +1,7 @@
 // Importing the Order model and necessary middleware
 
 import Order from "../models/OrderModel.js";
-import asyncHandler from "../middleware/asyncHandler.js";
+import asyncHandler from "../Middleware/asyncHandler.js";
 
 // Controller function to create a new order
 const addOrderItem = asyncHandler(async(req, res) => {
@@ -21,7 +21,7 @@ const addOrderItem = asyncHandler(async(req, res) => {
         const order = new Order({
             orderItems: orderItems && orderItems.map((x) => ({
                 ...x,
-                product: x.id,
+                product: x._id,
                 _id: undefined
             })),
             user: req.user._id,
@@ -60,8 +60,24 @@ const getOrdersById = asyncHandler(async(req, res) => {
 
 // Controller function to update orders to paid status
 const updateOrdersToPaid = asyncHandler(async(req, res) => {
-    // Placeholder response for updating orders to paid status
-    res.send("update orders to paid");
+   const order=await Order.findById(req.params.id);
+   if(order){
+    order.isPaid=true;
+    order.PaidAt=Date.now();
+    order.paymentResult={
+        id:req.body.id,
+        status:req.body.status,
+        update_time:req.body.update_time,
+        email_address:req.body.payer.email_address,
+
+    }
+    const updatedOrder=await order.save();
+   res.status(200).json(updatedOrder)
+   }else{
+    res.status(404);
+    throw new Error("Order not found")
+   }
+   
 });
 
 // Controller function to update order status to delivered

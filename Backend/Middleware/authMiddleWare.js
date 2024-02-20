@@ -22,7 +22,7 @@ try {
 }
 })
 
-const Admin=asyncHandler(async(req, res, next)=>{
+const admin=asyncHandler(async(req, res, next)=>{
 if(req.user && req.user.isAdmin){
     next();
 }else{
@@ -30,4 +30,4 @@ if(req.user && req.user.isAdmin){
     throw new Error("Not Authorized as an Admin")
 }
 })
-export {Admin, protect}
+export {admin, protect}

@@ -29,15 +29,17 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware for parsing cookies
 app.use(cookieParser());
 
-// Default route to check if the API is running
-app.get(`/`, (req, res) => {
-  res.send('API is running...');
-});
+
 
 // Routes for handling products and users
 app.use(`/api/products`, productRoute);
 app.use(`/api/users`, userRoute);
 app.use(`/api/orders`, orderRoutes);
+
+app.get('api/config/paypal', (req, res)=>res.send({
+  clientId:process.env.PAYPAL_CLIENT_ID
+}))
+
 
 // Applying the notFound and errorHandler middleware after defining routes
 app.use(notFound);

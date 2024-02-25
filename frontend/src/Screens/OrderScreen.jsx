@@ -7,16 +7,19 @@ import { useGetOrderDetailsQuery, useGetPayClientIdQuery, usePayOrderMutation } 
 import Loader from '../components/Loader';
 import Message from '../components/message';
 import {toast} from 'react-toastify';
+import { useDeliveredOrderMutation } from '../slices/orderApiSlice';
 import { useSelector } from 'react-redux';
 
 const OrderScreen = () => {
     const { id: orderId } = useParams();
     const { data: order, refetch, isLoading, isError } = useGetOrderDetailsQuery(orderId);
-
+    const [deliveredOrder, {isLoading:loadingDelivered}]=useDeliveredOrderMutation();
     const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
     const { userInfo } = useSelector((state) => state.auth);
-    const { data: paypal, isLoading: loadingPaypal, error: errorPaypal } = useGetPayClientIdQuery();
+    const { data: paypal, isLoading: loadingPaypal, error: errorPaypal }
+     = useGetPayClientIdQuery();
+    
 
     useEffect(() => {
         if (!errorPaypal && !loadingPaypal && paypal.clientId) {
@@ -85,6 +88,17 @@ function createOrder(data, actions){
   })
 };
 
+const deliveredHandler=async()=>{
+    try {
+        await deliveredOrder(orderId).unwrap();
+        refetch();
+    
+    toast.success("Order delivered successfully")
+    } catch (error) {
+      toast.error(error?.data?.message || error.message)  
+    }
+}
+
     return isLoading ? <Loader /> : isError ? <Message variant='danger'>Error loading order</Message> : (
         <>
             <h1>Order {order._id}</h1>
@@ -94,20 +108,21 @@ function createOrder(data, actions){
                         <ListGroupItem>
                             <h2>Shipping</h2>
                             <p>
-                                <strong>Name: </strong> {order.user.name}
+                    <strong>Name: </strong> {order.user.name}
                             </p>
                             <p>
-                                <strong>Email: </strong>{order.user.email}
+               <strong>Email: </strong>{order.user.email}
                             </p>
                             <p>
-                                <strong>Address: </strong>{order.shippingAddress.address}{' '}
-                                {order.shippingAddress.city}{' '} {order.shippingAddress.postalCode}
-                                {' '}{order.shippingAddress.country}
+    <strong>Address: </strong>{order.shippingAddress && order.shippingAddress.address}{' '}
+          {order.shippingAddress && order.shippingAddress.city}{' '}
+           {order.shippingAddress && order.shippingAddress.postalCode}
+            {' '}{order.shippingAddress && order.shippingAddress.country}
                             </p>
-                            {order.isDelivered ? (<Message variant='success'>Delivered on
-                                {order.deliveredAt}</Message>) : (<Message variant='danger'>
-                                    Not delivered
-                                </Message>)}
+         {order.isDelivered ? (<Message variant='success'>Delivered on
+          {order.deliveredAt}</Message>) : (<Message variant='danger'>
+                       Not delivered
+                </Message>)}
 
                         </ListGroupItem>
                         <ListGroupItem>
@@ -116,9 +131,9 @@ function createOrder(data, actions){
                                 <strong>Method: </strong>
                                 {order.paymentMethod}
                             </p>
-                            {order.isPaid ? (<Message variant='success'>
+                     {order.isPaid ? (<Message variant='success'>
                                 Paid on {order.paidAt}
-                            </Message>) : (<Message variant='danger'>Not Paid</Message>)}
+                 </Message>) : (<Message variant='danger'>Not Paid</Message>)}
                         </ListGroupItem>
                         <ListGroupItem>
                             <h2>Order Items</h2>
@@ -213,7 +228,15 @@ function createOrder(data, actions){
 
                                 </ListGroupItem>
                             )}
-
+{loadingDelivered && <Loader/>}
+{userInfo && userInfo.isAdmin && order.isPaid && (
+    <ListGroupItem>
+        <Button type='button' className='btn btn-block' 
+        onClick={deliveredHandler}>
+            Marked as delivered
+        </Button>
+    </ListGroupItem>
+)}
                         </ListGroup>
                     </Card>
                 </Col>

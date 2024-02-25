@@ -22,7 +22,7 @@ const ProfileScreen = () => {
     const dispatch=useDispatch();
     const {userInfo}=useSelector((state)=>state.auth);
     const [updateProfile, {isLoading:loadingUpdateProfile}]=useProfileMutation();
-    const {data:orders, isLoading:myOrdersLoading,error}=useGetMyOrdersQuery()
+const {data:orders, isLoading:myOrdersLoading,error}=useGetMyOrdersQuery()
     console.log(orders)
     useEffect(()=>{
       if(userInfo){
@@ -111,23 +111,23 @@ const ProfileScreen = () => {
       <th></th>
     </tr>
   </thead>
-  <tbody>
-  {orders.map((order) => (
+ <tbody>
+ {orders.map((order) => (
     <tr key={order._id}>
       <td>{order._id}</td>
-      <td>{order.createdAt.substring(0, 10)}</td>
+      <td>{order.createdAt && order.createdAt.substring(0, 10)}</td>
       <td>${order.totalPrice}</td>
       <td>
         {order.isPaid ? (
-          order.paidAt.substring(0, 10)
+          order.paidAt && order.paidAt.substring(0, 10)
         ) : (
           <FaTimes style={{ color: "red" }} />
         )}
       </td>
     </tr>
   ))}
-</tbody>
 
+ </tbody>
 </Table>
     )}
     </Col>

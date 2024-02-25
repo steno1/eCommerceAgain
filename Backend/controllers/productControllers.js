@@ -32,24 +32,23 @@ const createProduct=asyncHandler(async(req, res)=>{
   res.status(201).json(createProducts)
 });
 
-const updateProduct=asyncHandler(async(req, res)=>{
-  const {name, brand, category, price, image, countInStock,
-    description}=req.body;
-    const product=await Product.findById(req.params.id);
-    if(product){
-      product.name=name;
-      product.brand=brand;
-      product.category=category;
-      product.price=price;
-      product.countInStock=countInStock;
-      product.description=description;
-      product.image=image;
-      const updatedProduct=await product.save();
-      res.json(updatedProduct);
-    }else{
-      res.status(404);
-      throw new Error("Product not found")
-    }
-})
+const updateProduct = asyncHandler(async (req, res) => {
+  const { name, brand, category, price, image, countInStock, description } = req.body;
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    product.name = name;
+    product.brand = brand;
+    product.category = category;
+    product.price = price;
+    product.countInStock = countInStock;
+    product.description = description;
+    product.image = image;
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
+
 
 export { getProduct, getProductById, createProduct, updateProduct};

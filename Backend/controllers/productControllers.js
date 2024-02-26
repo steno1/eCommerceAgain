@@ -33,7 +33,8 @@ const createProduct=asyncHandler(async(req, res)=>{
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, brand, category, price, image, countInStock, description } = req.body;
+  const { name, brand, category,
+     price, image, countInStock, description } = req.body;
   const product = await Product.findById(req.params.id);
   if (product) {
     product.name = name;
@@ -46,7 +47,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {
-    res.status(404).json({ message: 'Product not found' });
+    res.status(404);
+    throw new Error("Resource not found")
   }
 });
 

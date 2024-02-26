@@ -6,8 +6,8 @@ const notFound = (req, res, next) => {
         message: error.message,
         stack: process.env.NODE_ENV === "production" ? "error" : error.stack,
     });
-    next(error);
 };
+
 
 
 const errorHandler = (err, req, res, next) => {

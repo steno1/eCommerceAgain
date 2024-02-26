@@ -106,7 +106,7 @@ toast.error(result.error)
 
             <FormGroup controlId='category' className='my-2'>
               <FormLabel>Category</FormLabel>
-              <FormControl type='category' placeholder='Enter Category'
+              <FormControl type='text' placeholder='Enter Category'
           value={category} onChange={(e)=>setCategory(e.target.value)}>
 
 
@@ -115,7 +115,7 @@ toast.error(result.error)
             </FormGroup>
             <FormGroup controlId='description' className='my-2'>
               <FormLabel>Description</FormLabel>
-              <FormControl type='description' placeholder='Enter Description'
+              <FormControl type='text' placeholder='Enter Description'
           value={description} onChange={(e)=>setDescription(e.target.value)}>
 
 
